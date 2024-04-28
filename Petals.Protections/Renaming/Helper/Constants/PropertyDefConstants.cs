@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Petals.Protections.Renaming.Helper.Constants
+﻿namespace Petals.Protections.Renaming.Helper.Constants
 {
+    /// <summary>
+    /// Contains constant values related to <see cref="ComponentAnalyzer"/>.
+    /// </summary>
     internal class PropertyDefConstants
     {
         /// <summary>
