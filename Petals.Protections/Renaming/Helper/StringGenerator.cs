@@ -1,23 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Petals.Protections.Renaming.Helper
 {
     public class StringGenerator
     {
-        public static string Generate(int size)
-        {
-            byte[] data = new byte[size];
+        /// <summary>
+        /// Random object for generating random strings.
+        /// </summary>
+        private static Random random = new Random();
 
-            using (var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+        /// <summary>
+        /// Function to generate a random string of a given size.
+        /// </summary>
+        /// <param name="length">The length of the string</param>
+        /// <returns>A random string of given size.</returns>
+        public static string Generate(int length)
+        {
+            const string chars = "01";
+            string hexString = "0b";
+
+            for (int i = 0; i < length; i++)
             {
-                rng.GetBytes(data);
+                hexString += chars[random.Next(chars.Length)];
             }
 
-            return Convert.ToBase64String(data).Substring(0, size);
+            return hexString;
         }
     }
 }

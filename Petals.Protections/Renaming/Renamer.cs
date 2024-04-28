@@ -47,98 +47,152 @@ namespace Petals.Protections.Renaming
             Parameters = parameters;
         }
 
+        /// <summary>
+        /// Function to rename various components of an assembly.
+        /// </summary>
+        /// <param name="assembly">The to-be obfuscated assembly.</param>
         public void Rename(Assembly assembly)
         {
             foreach (TypeDef typeDef in assembly.Module.Types)
             {
-                if (Properties)
-                {
-                    foreach (PropertyDef property in typeDef.Properties)
-                    {
-                        if (ComponentAnalyzer.CanRename(typeDef, property))
-                            property.Name = StringGenerator.Generate(16);
-                    }
-                }
+                PropertyPhase(typeDef);
+                FieldPhase(typeDef);
+                MethodPhase(typeDef);
+                EventPhase(typeDef);
+                ParameterPhase(typeDef);
+                TypePhase(assembly, typeDef);
+            }
+        }
 
-                if (Fields)
+        /// <summary>
+        /// Method to rename the types of the assembly.
+        /// </summary>
+        /// <param name="assembly">The to-be obfuscated assembly.</param>
+        /// <param name="typeDef">The type definition.</param>
+        private void TypePhase(Assembly assembly, TypeDef typeDef)
+        {
+            if (Types)
+            {
+                if (ComponentAnalyzer.CanRename(typeDef))
                 {
-                    foreach (FieldDef field in typeDef.Fields)
-                    {
-                        if (ComponentAnalyzer.CanRename(typeDef, field))
-                            field.Name = StringGenerator.Generate(16);
-                    }
-                }
+                    string formNamespace = StringGenerator.Generate(16);
+                    string formName = StringGenerator.Generate(16);
 
-                if (Methods)
-                {
                     foreach (MethodDef method in typeDef.Methods)
                     {
-                        if (ComponentAnalyzer.CanRename(method))
-                            method.Name = StringGenerator.Generate(16);
-                    }
-                }
-
-                if (Events)
-                {
-                    foreach (EventDef eventDef in typeDef.Events)
-                    {
-                        if (ComponentAnalyzer.CanRename(eventDef))
-                            eventDef.Name = StringGenerator.Generate(16);
-                    }
-                }
-
-                if (Parameters)
-                {
-                    foreach (MethodDef method in typeDef.Methods)
-                    {
-                        foreach (Parameter parameter in method.Parameters)
+                        if (typeDef.BaseType != null && typeDef.BaseType.Name == "Form")
                         {
-                            if (ComponentAnalyzer.CanRename(typeDef, parameter))
-                                parameter.Name = StringGenerator.Generate(16);
-                        }
-                    }
-                }
-
-                if (Types)
-                {
-                    if (ComponentAnalyzer.CanRename(typeDef))
-                    {
-                        string formNamespace = StringGenerator.Generate(16);
-                        string formName = StringGenerator.Generate(16);
-
-                        foreach (MethodDef method in typeDef.Methods)
-                        {
-                            if (typeDef.BaseType != null && typeDef.BaseType.Name == "Form")
+                            foreach (Resource resource in assembly.Module.Resources)
                             {
-                                foreach (Resource resource in assembly.Module.Resources)
+                                if (resource.Name.Contains(typeDef.Name + ".resources"))
                                 {
-                                    if (resource.Name.Contains(typeDef.Name + ".resources"))
-                                    {
-                                        resource.Name = formNamespace + "." + formName + ".resources";
-                                    }
+                                    resource.Name = formNamespace + "." + formName + ".resources";
                                 }
                             }
+                        }
 
-                            typeDef.Namespace = formNamespace;
-                            typeDef.Name = formName;
+                        typeDef.Namespace = formNamespace;
+                        typeDef.Name = formName;
 
-                            if (method.Name.Equals("InitializeComponent") && method.HasBody)
+                        if (method.Name.Equals("InitializeComponent") && method.HasBody)
+                        {
+                            foreach (Instruction instruction in method.Body.Instructions)
                             {
-                                foreach (Instruction instruction in method.Body.Instructions)
+                                if (instruction.OpCode.Equals(OpCodes.Ldstr))
                                 {
-                                    if (instruction.OpCode.Equals(OpCodes.Ldstr))
+                                    string str = (string)instruction.Operand;
+                                    if (str == typeDef.Name)
                                     {
-                                        string str = (string)instruction.Operand;
-                                        if (str == typeDef.Name)
-                                        {
-                                            instruction.Operand = formName;
-                                            break;
-                                        }
+                                        instruction.Operand = formName;
+                                        break;
                                     }
                                 }
                             }
                         }
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method to rename the parameters of the assembly.
+        /// </summary>
+        /// <param name="typeDef">The type definition.</param>
+        private void ParameterPhase(TypeDef typeDef)
+        {
+            if (Parameters)
+            {
+                foreach (MethodDef method in typeDef.Methods)
+                {
+                    foreach (Parameter parameter in method.Parameters)
+                    {
+                        if (ComponentAnalyzer.CanRename(typeDef, parameter))
+                            parameter.Name = StringGenerator.Generate(16);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method to rename the events of the assembly.
+        /// </summary>
+        /// <param name="typeDef">The type definition.</param>
+        private void EventPhase(TypeDef typeDef)
+        {
+            if (Events)
+            {
+                foreach (EventDef eventDef in typeDef.Events)
+                {
+                    if (ComponentAnalyzer.CanRename(eventDef))
+                        eventDef.Name = StringGenerator.Generate(16);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method to rename the methods of the assembly.
+        /// </summary>
+        /// <param name="typeDef">The type definition.</param>
+        private void MethodPhase(TypeDef typeDef)
+        {
+            if (Methods)
+            {
+                foreach (MethodDef method in typeDef.Methods)
+                {
+                    if (ComponentAnalyzer.CanRename(method))
+                        method.Name = StringGenerator.Generate(16);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method to rename the fields of the assembly.
+        /// </summary>
+        /// <param name="typeDef">The type definition.</param>
+        private void FieldPhase(TypeDef typeDef)
+        {
+            if (Fields)
+            {
+                foreach (FieldDef field in typeDef.Fields)
+                {
+                    if (ComponentAnalyzer.CanRename(typeDef, field))
+                        field.Name = StringGenerator.Generate(16);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method to rename the properties of the assembly.
+        /// </summary>
+        /// <param name="typeDef">The type definition.</param>
+        private void PropertyPhase(TypeDef typeDef)
+        {
+            if (Properties)
+            {
+                foreach (PropertyDef property in typeDef.Properties)
+                {
+                    if (ComponentAnalyzer.CanRename(typeDef, property))
+                        property.Name = StringGenerator.Generate(16);
                 }
             }
         }

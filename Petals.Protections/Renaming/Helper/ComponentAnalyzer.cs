@@ -3,8 +3,16 @@ using Petals.Protections.Renaming.Helper.Constants;
 
 namespace Petals.Protections.Renaming.Helper
 {
+    /// <summary>
+    /// Provides methods to analyze components for renaming eligibility.
+    /// </summary>
     public class ComponentAnalyzer
     {
+        /// <summary>
+        /// Determines whether a <see cref="TypeDef"/> can be renamed.
+        /// </summary>
+        /// <param name="typeDef">The <see cref="TypeDef"/> to analyze.</param>
+        /// <returns><see langword="true"/> if the <see cref="TypeDef"/> can be renamed; otherwise, <see langword="false"/>.</returns>
         public static bool CanRename(TypeDef typeDef)
         {
             if (typeDef.Namespace == TypeDefConstants.CosturaNamespace ||
@@ -23,6 +31,11 @@ namespace Petals.Protections.Renaming.Helper
             return true;
         }
 
+        /// <summary>
+        /// Determines whether an <see cref="EventDef"/> can be renamed.
+        /// </summary>
+        /// <param name="eventDef">The <see cref="EventDef"/> to analyze.</param>
+        /// <returns><see langword="true"/> if the <see cref="EventDef"/> can be renamed; otherwise, <see langword="false"/>.</returns>
         public static bool CanRename(EventDef eventDef)
         {
             if (eventDef.IsRuntimeSpecialName ||
@@ -31,6 +44,12 @@ namespace Petals.Protections.Renaming.Helper
             return true;
         }
 
+        /// <summary>
+        /// Determines whether a <see cref="FieldDef"/> in the context of a <see cref="TypeDef"/> can be renamed.
+        /// </summary>
+        /// <param name="typeDef">The <see cref="TypeDef"/> containing the <see cref="FieldDef"/>.</param>
+        /// <param name="fieldDef">The <see cref="FieldDef"/> to analyze.</param>
+        /// <returns><see langword="true"/> if the <see cref="FieldDef"/> can be renamed; otherwise, <see langword="false"/>.</returns>
         public static bool CanRename(TypeDef typeDef, FieldDef fieldDef)
         {
             return !(typeDef.Namespace.String.Contains(TypeDefConstants.PropertyIdentifier) ||
@@ -45,6 +64,12 @@ namespace Petals.Protections.Renaming.Helper
               fieldDef.DeclaringType.IsEnum);
         }
 
+        /// <summary>
+        /// Determines whether a <see cref="PropertyDef"/> in the context of a <see cref="TypeDef"/> can be renamed.
+        /// </summary>
+        /// <param name="typeDef">The <see cref="TypeDef"/> containing the <see cref="PropertyDef"/>.</param>
+        /// <param name="property">The <see cref="PropertyDef"/> to analyze.</param>
+        /// <returns><see langword="true"/> if the <see cref="PropertyDef"/> can be renamed; otherwise, <see langword="false"/>.</returns>
         public static bool CanRename(TypeDef typeDef, PropertyDef property)
         {
             if (typeDef.Namespace.String.Contains(TypeDefConstants.PropertyIdentifier) ||
@@ -56,6 +81,12 @@ namespace Petals.Protections.Renaming.Helper
             return true;
         }
 
+        /// <summary>
+        /// Determines whether a <see cref="Parameter"/> in the context of a <see cref="TypeDef"/> can be renamed.
+        /// </summary>
+        /// <param name="typeDef">The <see cref="TypeDef"/> containing the <see cref="Parameter"/>.</param>
+        /// <param name="parameter">The <see cref="Parameter"/> to analyze.</param>
+        /// <returns><see langword="true"/> if the <see cref="Parameter"/> can be renamed; otherwise, <see langword="false"/>.</returns>
         public static bool CanRename(TypeDef typeDef, Parameter parameter)
         {
             return !(typeDef.FullName == TypeDefConstants.ModuleIdentifier ||
@@ -63,6 +94,11 @@ namespace Petals.Protections.Renaming.Helper
                      parameter.Name == string.Empty);
         }
 
+        /// <summary>
+        /// Determines whether a <see cref="MethodDef"/> can be renamed.
+        /// </summary>
+        /// <param name="method">The <see cref="MethodDef"/> to analyze.</param>
+        /// <returns><see langword="true"/> if the <see cref="MethodDef"/> can be renamed; otherwise, <see langword="false"/>.</returns>
         public static bool CanRename(MethodDef method)
         {
             return !(method == null ||
