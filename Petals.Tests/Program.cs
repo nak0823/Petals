@@ -1,15 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Petals.Models;
+using Petals.Protections.Renaming;
 
 namespace Petals.Tests
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
+            var testPath = Console.ReadLine();
+            var assembly = new Assembly(testPath);
+            var renamer = new Renamer(true, true, true, true, true, true);
+            renamer.Rename(assembly);
+            assembly.SaveModule();
+           
+            Console.ReadKey();
         }
     }
 }
