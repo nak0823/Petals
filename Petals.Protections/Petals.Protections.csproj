@@ -51,6 +51,7 @@
     <Compile Include="Renaming\Helper\Constants\PropertyDefConstants.cs" />
     <Compile Include="Renaming\Helper\Constants\TypeDefConstants.cs" />
     <Compile Include="Renaming\Helper\StringGenerator.cs" />
+    <Compile Include="Renaming\L2F.cs" />
     <Compile Include="Renaming\Renamer.cs" />
   </ItemGroup>
   <ItemGroup>
