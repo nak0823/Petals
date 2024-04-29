@@ -9,6 +9,9 @@ namespace Petals.Protections.Renaming
 {
     public class L2F
     {
+        /// <summary>
+        /// Dictionary to store simplified locals (has body & instructions).
+        /// </summary>
         private static Dictionary<Local, FieldDef> ProcessedLocals = new Dictionary<Local, FieldDef>();
 
         public static void Protect(Assembly assembly)
@@ -23,47 +26,58 @@ namespace Petals.Protections.Renaming
             }
         }
 
+        /// <summary>
+        /// Process the method and replace the locals with fields.
+        /// </summary>
+        /// <param name="moduleDef"></param>
+        /// <param name="methodDef"></param>
         private static void ProcessMethod(ModuleDef moduleDef, MethodDef methodDef)
         {
-            methodDef.Body.SimplifyMacros(methodDef.Parameters);
-            var instructions = methodDef.Body.Instructions;
-            foreach (var t in instructions)
+            IList<Instruction> instructions = methodDef.Body.Instructions;
+
+            foreach (Instruction instruction in instructions)
             {
-                if (!(t.Operand is Local local)) continue;
-                FieldDef def;
+                if (!(instruction.Operand is Local local)) continue;
+
                 if (!ProcessedLocals.ContainsKey(local))
                 {
-                    def = new FieldDefUser(StringGenerator.Generate(16), new FieldSig(local.Type), FieldAttributes.Public | FieldAttributes.Static);
+                    string fieldName = StringGenerator.Generate(16);
+
+                    FieldDef def = new FieldDefUser(fieldName, new FieldSig(local.Type), FieldAttributes.Public | FieldAttributes.Static);
+
                     moduleDef.GlobalType.Fields.Add(def);
+
                     ProcessedLocals.Add(local, def);
                 }
                 else
                 {
-                    def = ProcessedLocals[local];
+                    FieldDef def = ProcessedLocals[local];
                 }
 
-                var eq = t.OpCode?.Code;
-                switch (eq)
+                switch (instruction.OpCode?.Code)
                 {
                     case Code.Ldloc:
-                        t.OpCode = OpCodes.Ldsfld;
+                        instruction.OpCode = OpCodes.Ldsfld;
                         break;
 
                     case Code.Ldloca:
-                        t.OpCode = OpCodes.Ldsflda;
+                        instruction.OpCode = OpCodes.Ldsflda;
                         break;
 
                     case Code.Stloc:
-                        t.OpCode = OpCodes.Stsfld;
+                        instruction.OpCode = OpCodes.Stsfld;
                         break;
 
                     default:
-                        t.OpCode = null;
+                        instruction.OpCode = null;
                         break;
                 }
-                t.Operand = def;
+
+                instruction.Operand = ProcessedLocals[local];
             }
-            ProcessedLocals.ToList().ForEach(x => methodDef.Body.Variables.Remove(x.Key));
+
+            ProcessedLocals.Keys.ToList().ForEach(x => methodDef.Body.Variables.Remove(x));
+
             ProcessedLocals = new Dictionary<Local, FieldDef>();
         }
     }
