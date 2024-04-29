@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petals.Tests", "Petals.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petals.Protections", "Petals.Protections\Petals.Protections.csproj", "{30232AFC-E96F-400C-B465-C0F539D980FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petals.CLI", "Petals.CLI\Petals.CLI.csproj", "{97BDB4F7-44F9-412A-BB2E-619C82124348}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{30232AFC-E96F-400C-B465-C0F539D980FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30232AFC-E96F-400C-B465-C0F539D980FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30232AFC-E96F-400C-B465-C0F539D980FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97BDB4F7-44F9-412A-BB2E-619C82124348}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97BDB4F7-44F9-412A-BB2E-619C82124348}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97BDB4F7-44F9-412A-BB2E-619C82124348}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97BDB4F7-44F9-412A-BB2E-619C82124348}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

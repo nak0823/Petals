@@ -51,6 +51,7 @@
     <Compile Include="Renaming\Helper\Constants\PropertyDefConstants.cs" />
     <Compile Include="Renaming\Helper\Constants\TypeDefConstants.cs" />
     <Compile Include="Renaming\Helper\StringGenerator.cs" />
+    <Compile Include="Renaming\L2F.cs" />
     <Compile Include="Renaming\Renamer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +62,9 @@
       <Project>{51b046d2-4d34-4fc8-8788-7b5042f713a7}</Project>
       <Name>Petals</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utilities\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

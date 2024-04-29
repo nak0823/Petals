@@ -11,9 +11,9 @@ namespace Petals.Tests
             var testPath = Console.ReadLine();
             var assembly = new Assembly(testPath);
             var renamer = new Renamer(true, true, true, true, true, true);
-            renamer.Rename(assembly);
+            renamer.Protect(assembly);
+          
             assembly.SaveModule();
-
             Console.ReadKey();
         }
     }
