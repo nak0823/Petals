@@ -7,14 +7,14 @@ using System.Linq;
 
 namespace Petals.Protections.Renaming
 {
-    public class L2F
+    public class L2F : IProtection
     {
         /// <summary>
         /// Dictionary to store simplified locals (has body & instructions).
         /// </summary>
         private static Dictionary<Local, FieldDef> ProcessedLocals = new Dictionary<Local, FieldDef>();
 
-        public static void Protect(Assembly assembly)
+        public override void Protect(Assembly assembly)
         {
             foreach (TypeDef typeDef in assembly.Module.Types.Where(type => type != assembly.Module.GlobalType))
             {

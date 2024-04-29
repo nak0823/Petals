@@ -5,7 +5,7 @@ using Petals.Protections.Renaming.Helper;
 
 namespace Petals.Protections.Renaming
 {
-    public class Renamer
+    public class Renamer : IProtection
     {
         /// <summary>
         /// Boolean value indicating whether to rename types.
@@ -51,7 +51,7 @@ namespace Petals.Protections.Renaming
         /// Function to rename various components of an assembly.
         /// </summary>
         /// <param name="assembly">The to-be obfuscated assembly.</param>
-        public void Rename(Assembly assembly)
+        public override void Protect(Assembly assembly)
         {
             foreach (TypeDef typeDef in assembly.Module.Types)
             {
